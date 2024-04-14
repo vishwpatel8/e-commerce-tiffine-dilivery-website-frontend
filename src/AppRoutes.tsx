@@ -4,6 +4,7 @@ import HomePage from "./Pages/HomePage";
 import AuthCallbackPage from "./Pages/AuthCallbackPage";
 import UserProfilePage from "./Pages/UserProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import ManageTiffineServicePage from "./Pages/ManageTiffineServicePage";
 
 const AppRoutes = () =>{
     return(
@@ -13,6 +14,7 @@ const AppRoutes = () =>{
 
             <Route element={<ProtectedRoute />}>
             <Route path="/user-profile" element={<Layout><UserProfilePage/></Layout>} />
+            <Route path="/manage-tiffineService" element={<Layout><ManageTiffineServicePage/></Layout>} />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
