@@ -26,3 +26,12 @@ export type TiffineService = {
     imageUrl: string;
     lastUpdated: string;
 }
+
+export type TiffineServiceSearchResponse = {
+    data : TiffineService[];
+    pagination: {
+        total: number;
+        page: number;
+        pages: number;
+    };
+};
