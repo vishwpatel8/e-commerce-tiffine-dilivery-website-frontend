@@ -27,6 +27,34 @@ export type TiffineService = {
     lastUpdated: string;
 }
 
+export type OrderStatus =
+  | "placed"
+  | "paid"
+  | "inProgress"
+  | "outForDelivery"
+  | "delivered";
+
+export type Order = {
+  _id: string;
+  tiffineService: TiffineService;
+  user: User;
+  cartItems: {
+    menuItemId: string;
+    name: string;
+    quantity: string;
+  }[];
+  deliveryDetails: {
+    name: string;
+    addressLine1: string;
+    city: string;
+    email: string;
+  };
+  totalAmount: number;
+  status: OrderStatus;
+  createdAt: string;
+  tiffineServiceId: string;
+};
+
 export type TiffineServiceSearchResponse = {
     data : TiffineService[];
     pagination: {

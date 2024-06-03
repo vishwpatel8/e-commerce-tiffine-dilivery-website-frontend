@@ -1,35 +1,35 @@
-import { TiffineService } from "@/types";
+import { Order, TiffineService } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const useGetMyTiffineService = () =>{
+export const useGetMyTiffineService = () => {
     const { getAccessTokenSilently } = useAuth0();
 
-    const getMyTiffineServiceRequest = async (): Promise<TiffineService>=> {
+    const getMyTiffineServiceRequest = async (): Promise<TiffineService> => {
         const accessToken = await getAccessTokenSilently();
 
-        const response = await fetch(`${API_BASE_URL}/api/my/tiffineService` , {
+        const response = await fetch(`${API_BASE_URL}/api/my/tiffineService`, {
             method: "GET",
             headers: {
-                Authorization : `Bearer ${accessToken}`
+                Authorization: `Bearer ${accessToken}`
             },
-        }) ;
+        });
 
-        if(!response.ok){
+        if (!response.ok) {
             throw new Error("Failed to get Tiffine Service");
         }
         return response.json();
     };
 
-    const { data: tiffineService, isLoading} = useQuery(
-        "fetchMyTiffineService", 
+    const { data: tiffineService, isLoading } = useQuery(
+        "fetchMyTiffineService",
         getMyTiffineServiceRequest
     );
 
-    return { tiffineService , isLoading };
+    return { tiffineService, isLoading };
 };
 
 export const useCreateMyTiffineService = () => {
@@ -73,12 +73,12 @@ export const useCreateMyTiffineService = () => {
     return { createTiffineService, isLoading };
 };
 
-export const useUpdateMyTiffineService = () =>{
+export const useUpdateMyTiffineService = () => {
     const { getAccessTokenSilently } = useAuth0();
 
-    const updateTiffineServiceRequest = async(
+    const updateTiffineServiceRequest = async (
         tiffineServiceFormData: FormData):
-        Promise<TiffineService>=>{
+        Promise<TiffineService> => {
         const accessToken = await getAccessTokenSilently();
 
         const response = await fetch(`${API_BASE_URL}/api/my/tiffineService`, {
@@ -89,27 +89,107 @@ export const useUpdateMyTiffineService = () =>{
             body: tiffineServiceFormData,
         });
 
-        if(!response){
+        if (!response) {
             throw new Error("Failed to update tiffineService");
         }
 
         return response.json();
     };
 
-    const { 
-        mutate: updateTiffineService, 
-        isLoading, 
-        error, 
+    const {
+        mutate: updateTiffineService,
+        isLoading,
+        error,
         isSuccess
-    }= useMutation(updateTiffineServiceRequest);
+    } = useMutation(updateTiffineServiceRequest);
 
-    if(isSuccess){
+    if (isSuccess) {
         toast.success("Tiffine Service Updated");
     }
 
-    if(error){
+    if (error) {
         toast.error("Unable to update Tiffine Service");
     }
 
-    return {updateTiffineService, isLoading };
- };
+    return { updateTiffineService, isLoading };
+};
+
+export const useGetMyTiffineServiceOrders = () => {
+    const { getAccessTokenSilently } = useAuth0();
+
+    const getMyTiffineServiceOrdersRequest = async (): Promise<Order[]> => {
+        const accessToken = await getAccessTokenSilently();
+
+        const response = await fetch(`${API_BASE_URL}/api/my/tiffineService/order`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch orders");
+        }
+
+        return response.json();
+    };
+
+    const { data: orders, isLoading } = useQuery(
+        "fetchMyTiffineServiceOrders",
+        getMyTiffineServiceOrdersRequest
+    );
+
+    return { orders, isLoading };
+};
+
+type UpdateOrderStatusRequest = {
+    orderId: string;
+    status: string;
+  };
+
+export const useUpdateMyTiffineServiceOrder = () => {
+    const { getAccessTokenSilently } = useAuth0();
+  
+    const updateMyTiffineServiceOrder = async (
+      updateStatusOrderRequest: UpdateOrderStatusRequest
+    ) => {
+      const accessToken = await getAccessTokenSilently();
+  
+      const response = await fetch(
+        `${API_BASE_URL}/api/my/tiffineService/order/${updateStatusOrderRequest.orderId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: updateStatusOrderRequest.status }),
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+  
+      return response.json();
+    };
+  
+    const {
+      mutateAsync: updateTiffineServiceStatus,
+      isLoading,
+      isError,
+      isSuccess,
+      reset,
+    } = useMutation(updateMyTiffineServiceOrder);
+  
+    if (isSuccess) {
+      toast.success("Order updated");
+    }
+  
+    if (isError) {
+      toast.error("Unable to update order");
+      reset();
+    }
+  
+    return { updateTiffineServiceStatus, isLoading };
+  };
