@@ -1,5 +1,5 @@
 import leftimg from "../assets/left.png";
-import rightimg from "../assets/appDownload.png";
+import rightimg from "../assets/rightside.png";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
 
@@ -30,9 +30,7 @@ const HomePage = () => {
                     <span className="font-bold text-3xl tracking-tight  ">
                         Order Take away even faster!
                         </span>
-                    <span>
-                        Download the AAHARPETIKA for faster ordering and personalize reccoandations
-                        </span>
+                    
                     <img src={rightimg} className="mx-auto w-[400px]" />
                 </div>
             </div>
